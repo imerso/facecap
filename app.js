@@ -829,19 +829,17 @@ function getXR()
 // Export and download face_mesh gltf file
 function export_mesh()
 {
-	face_mesh.parent = null;
-	face_mesh.bakeCurrentTransformIntoVertices();
+    face_mesh.bakeCurrentTransformIntoVertices();
 
-	let options = {
-	  shouldExportNode: function (node) {
-	    return node == face_mesh;
-	  },
-	};
+    let options = {
+        shouldExportNode: function (node) {
+            return node == face_mesh;
+        },
+    };
 
-	BABYLON.GLTF2Export.GLBAsync(scene, "face_mesh", options).then((glb) => {
-	  glb.downloadFiles();
-	  face_mesh.parent = head;
-	});
+    BABYLON.GLTF2Export.GLBAsync(scene, "face_mesh", options).then((glb) => {
+        glb.downloadFiles();
+    });
 }
 
 
@@ -903,6 +901,32 @@ async function CreateScene(engine, canvas)
 }
 
 
+function toggle_wireframe()
+{
+    face_mesh.material.wireframe = !face_mesh.material.wireframe;
+}
+
+
+function toggle_capture()
+{
+    // toggles texture capturing
+    if (!ai_detection.capture_callback)
+    {
+        ai_detection.capture_callback = Capture_Callback;
+        console.log("Capturing texture...");
+    }
+    else
+    {
+        ai_detection.capture_callback = null;
+        unwrap_mesh.updateVerticesData(BABYLON.VertexBuffer.UVKind, face_uvs);
+        console.log("Stopped capturing.");
+
+        // export face_mesh
+        export_mesh();
+    }
+}
+
+
 // App initialization
 async function Load()
 {
@@ -931,14 +955,6 @@ async function Load()
     face_mesh = CreateFaceMesh();
     unwrap_mesh = CreateFaceUnwrap();
     unwrap_mesh.setEnabled(false);
-
-    head = BABYLON.CreateSphere("head", {diameter:3.5});
-    head.position.set(0, 1, 0);
-    let headMat = new BABYLON.StandardMaterial("head", scene);
-    headMat.emissiveColor = new BABYLON.Color3(.8, .7, .9);
-    head.material = headMat;
-    
-    face_mesh.parent = head;
 
     CreateGround(-5);
 
@@ -981,21 +997,7 @@ async function Load()
     btn_freeze.color = "white";
     btn_freeze.background = "gray";
     btn_freeze.onPointerUpObservable.add(function() {
-            // toggles texture capturing
-            if (!ai_detection.capture_callback)
-            {
-                ai_detection.capture_callback = Capture_Callback;
-                console.log("Capturing texture...");
-            }
-            else
-            {
-                ai_detection.capture_callback = null;
-                unwrap_mesh.updateVerticesData(BABYLON.VertexBuffer.UVKind, face_uvs);
-                console.log("Stopped capturing.");
-
-                // export face_mesh
-                export_mesh();
-            }
+        toggle_capture();
     });
     advancedTexture.addControl(btn_freeze);    
 
@@ -1009,10 +1011,21 @@ async function Load()
     btn_wireframe.color = "white";
     btn_wireframe.background = "gray";
     btn_wireframe.onPointerUpObservable.add(function() {
-            face_mesh.material.wireframe = !face_mesh.material.wireframe;
-            console.log("Wireframe: " + face_mesh.material.wireframe);
+        toggle_wireframe();
     });
     advancedTexture.addControl(btn_wireframe);    
+
+    canvas.addEventListener('keydown', function(e)
+    {
+        if (e.keyCode == 32)            // space
+        {
+            toggle_capture();
+        }
+        else if (e.keyCode == 87)       // 'w', toggles wireframe
+        {
+            toggle_wireframe();
+        }
+    });
 }
 
 
