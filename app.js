@@ -967,10 +967,20 @@ async function Load()
         engine.resize();
     });
 
-    canvas.addEventListener('keydown', function(e)
-    {
-        if (e.keyCode == 32)            // space
-        {
+    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI(
+      "ui"
+    );
+
+    var btn_freeze = BABYLON.GUI.Button.CreateSimpleButton("btn1", "Freeze/Save");
+    btn_freeze.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+    btn_freeze.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    btn_freeze.topInPixels = 8;
+    btn_freeze.leftInPixels = 8;
+    btn_freeze.width = "150px";
+    btn_freeze.height = "80px";
+    btn_freeze.color = "white";
+    btn_freeze.background = "gray";
+    btn_freeze.onPointerUpObservable.add(function() {
             // toggles texture capturing
             if (!ai_detection.capture_callback)
             {
@@ -986,21 +996,23 @@ async function Load()
                 // export face_mesh
                 export_mesh();
             }
-        }
-        else if (e.keyCode == 87)       // 'w', toggles wireframe
-        {
+    });
+    advancedTexture.addControl(btn_freeze);    
+
+    var btn_wireframe = BABYLON.GUI.Button.CreateSimpleButton("btn2", "Wireframe");
+    btn_wireframe.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+    btn_wireframe.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    btn_wireframe.topInPixels = 100;
+    btn_wireframe.leftInPixels = 8;
+    btn_wireframe.width = "150px";
+    btn_wireframe.height = "80px";
+    btn_wireframe.color = "white";
+    btn_wireframe.background = "gray";
+    btn_wireframe.onPointerUpObservable.add(function() {
             face_mesh.material.wireframe = !face_mesh.material.wireframe;
             console.log("Wireframe: " + face_mesh.material.wireframe);
-        }
-        else if (e.keyCode == 80)       // 'p', toggles pointcloud
-        {
-            face_mesh.material.pointsCloud = !face_mesh.material.pointsCloud;
-            face_mesh.material.pointSize = 5;
-            console.log("Pointcloud: " + face_mesh.material.pointsCloud);
-        }
-
-
     });
+    advancedTexture.addControl(btn_wireframe);    
 }
 
 
