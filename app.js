@@ -987,7 +987,7 @@ async function Load()
                 export_mesh();
             }
         }
-        else if (e.keyCode == 82)       // 'r', toggles wireframe
+        else if (e.keyCode == 87)       // 'w', toggles wireframe
         {
             face_mesh.material.wireframe = !face_mesh.material.wireframe;
             console.log("Wireframe: " + face_mesh.material.wireframe);
