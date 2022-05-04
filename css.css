@@ -1,0 +1,26 @@
+html, body { margin:0; width:100%; height:100%; overflow:hidden; color:#A0A0A0 }
+
+#canvas
+{
+    margin: 0px;
+    border: 0;
+    width: 100%;
+    height: 100%;
+    z-index:10;
+}
+
+.button
+{
+    width:64px;
+    height:32px;
+    border:0;
+    background:#404040;
+    color:#80B080;
+    -moz-opacity:0.7; opacity:0.7; filter:alpha(opacity=70);
+    cursor:pointer;
+}
+
+.button:hover
+{
+    background:#808080;
+}
