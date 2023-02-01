@@ -3,6 +3,9 @@ Babylon.js + Mediapipe face capture
 
 You need a webcam for this one.
 
+Demo:
+https://imerso.github.io/babylon.js/facecap
+
 <p>
     <img src="screenshot.jpg" />
 </p>
